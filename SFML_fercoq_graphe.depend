@@ -1,0 +1,28 @@
+# depslib dependency file v1.0
+1522778542 source:c:\users\timothée\desktop\projet ing2\sfml fercoq\bar.cpp
+	"bar.h"
+
+1522776758 c:\users\timothée\desktop\projet ing2\sfml fercoq\bar.h
+	<iostream>
+	<SFML/Graphics.hpp>
+
+1522777826 source:c:\users\timothée\desktop\projet ing2\sfml fercoq\main.cpp
+	"bar.h"
+	"widgets.h"
+	"arete.h"
+	<vector>
+
+1522776147 source:c:\users\timothée\desktop\projet ing2\sfml fercoq\widgets.cpp
+	"widgets.h"
+
+1522775880 c:\users\timothée\desktop\projet ing2\sfml fercoq\widgets.h
+	"bar.h"
+
+1522778736 source:c:\users\timothée\desktop\projet ing2\sfml fercoq\arete.cpp
+	"arete.h"
+
+1522777155 c:\users\timothée\desktop\projet ing2\sfml fercoq\arete.h
+	"widgets.h"
+	<SFML/Graphics.hpp>
+	<math.h>
+
