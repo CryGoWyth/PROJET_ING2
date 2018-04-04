@@ -52,6 +52,8 @@
 		<Unit filename="arete.h" />
 		<Unit filename="bar.cpp" />
 		<Unit filename="bar.h" />
+		<Unit filename="graphe.cpp" />
+		<Unit filename="graphe.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="widgets.cpp" />
 		<Unit filename="widgets.h" />

@@ -24,10 +24,15 @@ void Arete::createLine()
     mabar.update((first->getmx() + second->getmx()) / 2, (first->getmy() + second->getmy()) / 2);
 }
 
-void Arete::dessiner(sf::RenderWindow &window)
+void Arete::dessiner(sf::RenderWindow &window, int nb)
 {
     createLine();
     window.draw(line);
     window.draw(background);
-    mabar.dessiner(window);
+    mabar.dessiner(window, nb);
+}
+
+bool Arete::get_selected()
+{
+    return mabar.get_selected();
 }

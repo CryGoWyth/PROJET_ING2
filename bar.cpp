@@ -2,13 +2,12 @@
 
 Bar::Bar(int x, int y) : m_x(x), m_y(y), my(y), selected(false)
 {
-    sf::Font font;
-    if(!font.loadFromFile("arial.ttf")) std::cout << "Couldn't load the text" << std::endl;
+    font.loadFromFile("arial.ttf");
     m_text.setFont(font);
     m_text.setFillColor(sf::Color::White);
-    m_text.setCharacterSize(24);
-    m_text.setString("Salut");
-    m_text.setPosition(m_x, m_y + 40);
+    m_text.setCharacterSize(12);
+    m_text.setStyle(sf::Text::Bold);
+    m_text.setPosition(m_x - 13, m_y + 41);
 
     m_button.setPosition(sf::Vector2f(m_x - 8, m_y - 4));
     m_button.setSize(sf::Vector2f(16, 8));
@@ -36,10 +35,12 @@ Bar::Bar(int x, int y) : m_x(x), m_y(y), my(y), selected(false)
 Bar::~Bar()
 {}
 
-void Bar::dessiner(sf::RenderWindow &window)
+void Bar::dessiner(sf::RenderWindow &window, int nb)
 {
-    mouvement(window);
+    mouvement(window, nb);
     window.draw(background);
+    m_text.setString(get_value());
+    window.draw(m_text);
     window.draw(l1);
     window.draw(l2);
     window.draw(l3);
@@ -48,19 +49,17 @@ void Bar::dessiner(sf::RenderWindow &window)
     window.draw(m_button);
 }
 
-void Bar::mouvement(sf::RenderWindow &window)
+void Bar::mouvement(sf::RenderWindow &window, int nb)
 {
-    if((selected && sf::Mouse::isButtonPressed(sf::Mouse::Left)) || (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (sf::Mouse::getPosition(window)).x > m_x - 10 && (sf::Mouse::getPosition(window)).x < m_x + 10 && (sf::Mouse::getPosition(window)).y > m_y - 40 && (sf::Mouse::getPosition(window)).y < m_y + 40)){
+    if((selected && !nb && sf::Mouse::isButtonPressed(sf::Mouse::Left)) || (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (sf::Mouse::getPosition(window)).x > m_x - 10 && (sf::Mouse::getPosition(window)).x < m_x + 10 && (sf::Mouse::getPosition(window)).y > m_y - 40 && (sf::Mouse::getPosition(window)).y < m_y + 40)){
         m_button.setPosition(sf::Vector2f(m_x - 8, sf::Mouse::getPosition(window).y)), my = sf::Mouse::getPosition(window).y - m_y, selected = true;
     }
-    else selected = false;
-
-    if(m_y == 100) std::cout << "my : " << my << ", m_y : " << m_y << std::endl;
+    else if(!sf::Mouse::isButtonPressed(sf::Mouse::Left) && selected) selected = false;
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) get_value();
 
-    if(m_button.getPosition().y > m_y - 8 + 40) m_button.setPosition(sf::Vector2f(m_x - 8, m_y - 8 + 39));
-    if(m_button.getPosition().y < m_y - 40) m_button.setPosition(sf::Vector2f(m_x - 8, m_y - 39));
+    if(m_button.getPosition().y > m_y - 8 + 40) m_button.setPosition(sf::Vector2f(m_x - 8, m_y - 8 + 40)), my = 32;
+    if(m_button.getPosition().y < m_y - 40) m_button.setPosition(sf::Vector2f(m_x - 8, m_y - 40)), my = -40;
 }
 
 void Bar::update(int x, int y)
@@ -72,13 +71,17 @@ void Bar::update(int x, int y)
     background.setPosition(sf::Vector2f(m_x - 12, m_y - 42));
     m_bar.setPosition(sf::Vector2f(x - 2, y - 40));
     m_button.setPosition(sf::Vector2f(x - 8, y + my));
-    m_text.setPosition(x, y + 40);
+    m_text.setPosition(x - 13, y + 41);
     m_x = x, m_y = y;
 }
 
-void Bar::get_value()
+std::string Bar::get_value()
 {
-    std::cout << "m_x : " << m_x << ", m_y : " << m_y << ", my : " << my << std::endl;//43 - (m_y - my)
+    std::ostringstream test;
+    int i = 0;
+    i = (((100 - (my + 50)) * 100) / 72) - 25;
+    test << i;
+    return test.str();
 }
 
 bool Bar::get_selected()

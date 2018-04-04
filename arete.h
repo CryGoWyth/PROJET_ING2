@@ -13,7 +13,8 @@ class Arete
         Arete(Widgets *premier, Widgets *deux);
         ~Arete();
         void createLine();
-        void dessiner(sf::RenderWindow &window);
+        void dessiner(sf::RenderWindow &window, int nb);
+        bool get_selected();
 
     private:
         Widgets *first, *second;
