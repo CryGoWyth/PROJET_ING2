@@ -2,6 +2,7 @@
 #define ARETE_H
 
 #include "widgets.h"
+#include <cstdlib>
 #include <SFML/Graphics.hpp>
 #include <math.h>
 
@@ -14,6 +15,8 @@ class Arete
         ~Arete();
         void createLine();
         void dessiner(sf::RenderWindow &window, int nb);
+        Widgets* get_second();
+        int get_mabar();
         bool get_selected();
 
     private:

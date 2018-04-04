@@ -36,3 +36,13 @@ bool Arete::get_selected()
 {
     return mabar.get_selected();
 }
+
+int Arete::get_mabar()
+{
+    return std::atoi(mabar.get_value().c_str());
+}
+
+Widgets* Arete::get_second()
+{
+    return second;
+}

@@ -5,7 +5,7 @@ Widgets::Widgets(int x, int y , int nb) : mabar(x - 7, y + 3), m_x(x), m_y(y), m
     std::ostringstream buf;
     font.loadFromFile("arial.ttf");
     m_text.setFont(font);
-    m_text.setFillColor(sf::Color::White);
+    m_text.setColor(sf::Color::White);
     m_text.setCharacterSize(12);
     m_text.setStyle(sf::Text::Bold);
     m_text.setPosition(m_x  + 101, m_y + 50);

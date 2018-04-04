@@ -2,7 +2,7 @@
 #define GRAPHE_H
 
 #include "bar.h"
-#include "widgets.h"
+#include "espece.h"
 #include "arete.h"
 #include <vector>
 
@@ -12,10 +12,12 @@ class Graphe
         Graphe();
         ~Graphe();
         void gameWhile();
+        std::vector<Arete*> get_aretes();
+        std::vector<Espece*> get_especes();
 
     private:
         std::vector<Arete*> m_aretes;
-        std::vector<Widgets*> m_widgets;
+        std::vector<Espece*> m_especes;
         sf::RenderWindow window;
         int nbControle;
 };

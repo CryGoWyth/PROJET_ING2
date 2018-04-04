@@ -4,7 +4,7 @@ Bar::Bar(int x, int y) : m_x(x), m_y(y), my(y), selected(false)
 {
     font.loadFromFile("arial.ttf");
     m_text.setFont(font);
-    m_text.setFillColor(sf::Color::White);
+    m_text.setColor(sf::Color::White);
     m_text.setCharacterSize(12);
     m_text.setStyle(sf::Text::Bold);
     m_text.setPosition(m_x - 13, m_y + 41);
@@ -51,7 +51,7 @@ void Bar::dessiner(sf::RenderWindow &window, int nb)
 
 void Bar::mouvement(sf::RenderWindow &window, int nb)
 {
-    if((selected && !nb && sf::Mouse::isButtonPressed(sf::Mouse::Left)) || (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (sf::Mouse::getPosition(window)).x > m_x - 10 && (sf::Mouse::getPosition(window)).x < m_x + 10 && (sf::Mouse::getPosition(window)).y > m_y - 40 && (sf::Mouse::getPosition(window)).y < m_y + 40)){
+    if((selected && !nb && sf::Mouse::isButtonPressed(sf::Mouse::Left)) || (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (sf::Mouse::getPosition(window)).x > m_x - 10 && (sf::Mouse::getPosition(window)).x < m_x + 10 && (sf::Mouse::getPosition(window)).y > m_y - 44 && (sf::Mouse::getPosition(window)).y < m_y + 44)){
         m_button.setPosition(sf::Vector2f(m_x - 8, sf::Mouse::getPosition(window).y)), my = sf::Mouse::getPosition(window).y - m_y, selected = true;
     }
     else if(!sf::Mouse::isButtonPressed(sf::Mouse::Left) && selected) selected = false;
