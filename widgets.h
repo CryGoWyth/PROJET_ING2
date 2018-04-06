@@ -7,13 +7,15 @@
 class Widgets
 {
     public:
-        Widgets(int x, int y , int nb);
+        Widgets(int x, int y , int nb, int val);
         ~Widgets();
         void dessiner(sf::RenderWindow &window, int nb);
         void mouvement(sf::RenderWindow &window, int nb);
         void update();
         void loadPictures();
         bool get_selected();
+        int get_mabar();
+        int get_nb();
         int getmx();
         int getmy();
 

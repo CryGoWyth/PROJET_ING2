@@ -8,7 +8,7 @@
 class Bar
 {
     public:
-        Bar(int x, int y);
+        Bar(int x, int y, int val);
         ~Bar();
         void dessiner(sf::RenderWindow &window, int nb);
         void mouvement(sf::RenderWindow &window, int nb);

@@ -11,11 +11,14 @@
 class Arete
 {
     public:
-        Arete(Widgets *premier, Widgets *deux);
+        Arete(Widgets *premier, Widgets *deux, int val);
         ~Arete();
         void createLine();
         void dessiner(sf::RenderWindow &window, int nb);
+        void set_first(Widgets *premier);
+        void set_second(Widgets *deuxieme);
         Widgets* get_second();
+        Widgets* get_first();
         int get_mabar();
         bool get_selected();
 

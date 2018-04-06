@@ -1,7 +1,8 @@
 #include "bar.h"
 
-Bar::Bar(int x, int y) : m_x(x), m_y(y), my(y), selected(false)
+Bar::Bar(int x, int y, int val) : m_x(x), m_y(y), selected(false)
 {
+    my = -(((val + 25) * 72) / 100) + 50;
     font.loadFromFile("arial.ttf");
     m_text.setFont(font);
     m_text.setColor(sf::Color::White);

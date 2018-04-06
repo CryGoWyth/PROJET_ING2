@@ -1,6 +1,6 @@
 #include "widgets.h"
 
-Widgets::Widgets(int x, int y , int nb) : mabar(x - 7, y + 3), m_x(x), m_y(y), m_nb(nb), selected(false), divx(0)
+Widgets::Widgets(int x, int y , int nb, int val) : mabar(x - 7, y + 3, val), m_x(x), m_y(y), m_nb(nb), selected(false), divx(0)
 {
     std::ostringstream buf;
     font.loadFromFile("arial.ttf");
@@ -59,7 +59,6 @@ void Widgets::loadPictures()
     std::string name = "pics/clown";
     name += char(m_nb + 49);
     name += ".jpg";
-    std::cout << "name : " << name << std::endl;
     if (!m_texture.loadFromFile(name.c_str()))
         std::cout << "Couldn't load the image" << std::endl;
 
@@ -108,6 +107,16 @@ int Widgets::getmx()
 int Widgets::getmy()
 {
     return m_y;
+}
+
+int Widgets::get_nb()
+{
+    return m_nb;
+}
+
+int Widgets::get_mabar()
+{
+    return std::atoi(mabar.get_value().c_str());
 }
 
 bool Widgets::get_selected()

@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="SFML_fercoq_graphe" />
+		<Option title="SFML_PROJET_ING2" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
@@ -52,9 +52,17 @@
 		<Unit filename="arete.h" />
 		<Unit filename="bar.cpp" />
 		<Unit filename="bar.h" />
+		<Unit filename="button.cpp" />
+		<Unit filename="button.h" />
+		<Unit filename="espece.cpp" />
+		<Unit filename="espece.h" />
+		<Unit filename="fonction.cpp" />
 		<Unit filename="graphe.cpp" />
 		<Unit filename="graphe.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="menu.cpp" />
+		<Unit filename="menu.h" />
+		<Unit filename="prototype.h" />
 		<Unit filename="widgets.cpp" />
 		<Unit filename="widgets.h" />
 		<Extensions>

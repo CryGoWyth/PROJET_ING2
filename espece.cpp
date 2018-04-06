@@ -1,9 +1,9 @@
 #include "espece.h"
 
-Espece::Espece(int x, int y, int nb, int N, int K)
+Espece::Espece(int x, int y, int nb, int val, int N, int K)
 {
     m_facteur = 1;
-    m_widgets = new Widgets(x, y, nb);
+    m_widgets = new Widgets(x, y, nb, val);
     m_population = N;
     m_capacite = K;
 
@@ -18,7 +18,7 @@ Espece::~Espece()
 void Espece::evo_pop(std::vector<Espece*> m_especes)
 {
     ///N(t+1) = Nt + rNt(1-Nt/K)
-    m_population = m_population + m_facteur * m_population * (1 - m_population/m_capacite);
+    //m_population = m_population + m_facteur * m_population * (1 - m_population/m_capacite);
 
     //On soustrait ce que les prédateurs mangent
     for(auto elem : m_predateurs)
@@ -75,4 +75,44 @@ int Espece::get_pop(Arete *a, std::vector<Espece*> m_especes)
 int Espece::get_selected()
 {
     return m_widgets->get_selected();
+}
+
+int Espece::get_number()
+{
+    return m_widgets->get_nb();
+}
+
+int Espece::get_numS()
+{
+    return m_numS;
+}
+
+void Espece::set_numS(int num)
+{
+    m_numS=num;
+}
+
+int Espece::get_numAS()
+{
+    return m_numAS;
+}
+
+void Espece::set_numAS(int numA)
+{
+    m_numAS=numA;
+}
+
+bool Espece::get_marque()
+{
+    return m_marque;
+}
+
+void Espece::set_marque(bool m)
+{
+    m_marque=m;
+}
+
+std::vector<Espece> Espece::get_adjacents() const
+{
+    return m_adjacents;
 }
