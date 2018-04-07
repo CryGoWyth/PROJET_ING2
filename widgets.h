@@ -12,8 +12,9 @@ class Widgets
         void dessiner(sf::RenderWindow &window, int nb);
         void mouvement(sf::RenderWindow &window, int nb);
         void update();
-        void loadPictures();
+        void set_Texture(sf::Texture *mat, int i);
         bool get_selected();
+        int get_nbImage();
         int get_mabar();
         int get_nb();
         int getmx();
@@ -26,7 +27,7 @@ class Widgets
         sf::Sprite m_sprite;
         sf::Text m_text;
         sf::Font font;
-        int m_x, m_y, m_nb, divx, divy;
+        int m_x, m_y, m_nb, divx, divy, nbImage;
         bool selected;
 };
 

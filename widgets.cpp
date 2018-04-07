@@ -33,8 +33,6 @@ Widgets::Widgets(int x, int y , int nb, int val) : mabar(x - 7, y + 3, val), m_x
     support.setFillColor(sf::Color(0, 0, 0));
     support.setPosition(sf::Vector2f(m_x + 100, m_y + 50));
     support.setSize(sf::Vector2f(20, 12));
-
-    loadPictures();
 }
 
 Widgets::~Widgets()
@@ -54,15 +52,10 @@ void Widgets::dessiner(sf::RenderWindow &window, int nb)
     window.draw(m_text);
 }
 
-void Widgets::loadPictures()
+void Widgets::set_Texture(sf::Texture *mat, int i)
 {
-    std::string name = "pics/clown";
-    name += char(m_nb + 49);
-    name += ".jpg";
-    if (!m_texture.loadFromFile(name.c_str()))
-        std::cout << "Couldn't load the image" << std::endl;
-
-    m_sprite.setTexture(m_texture);
+    m_texture = *mat, nbImage = i;
+    m_sprite.setTexture(*mat);
     m_sprite.setPosition(m_x + 12, m_y - 41);
 }
 
@@ -97,6 +90,11 @@ void Widgets::update()
     background.setPosition(sf::Vector2f(m_x - 22, m_y - 42));
     m_sprite.setPosition(m_x + 12, m_y - 41);
     mabar.update(m_x - 7, m_y + 3);
+}
+
+int Widgets::get_nbImage()
+{
+    return nbImage;
 }
 
 int Widgets::getmx()

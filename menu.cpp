@@ -2,11 +2,13 @@
 
 Menu::Menu() : open(false)
 {
+    m_buttons.push_back(new Button("Creer"));
     m_buttons.push_back(new Button("Charger"));
     m_buttons.push_back(new Button("Sauver"));
     m_buttons.push_back(new Button("Ajouter"));
     m_buttons.push_back(new Button("Modifier"));
     m_buttons.push_back(new Button("Supprimer"));
+    m_buttons.push_back(new Button("Simuler"));
 
     bg.setSize(sf::Vector2f(175, m_buttons.size() * 35 + 8));
     bg.setFillColor(sf::Color(5, 5, 5));

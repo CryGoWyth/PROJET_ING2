@@ -33,6 +33,11 @@ void Button::afficher(sf::RenderWindow &window, int x, int y)
     window.draw(m_text);
 }
 
+int Button::gety()
+{
+    return 165;
+}
+
 void Button::set_state(bool s)
 {
     m_state = s;
@@ -41,4 +46,9 @@ void Button::set_state(bool s)
 bool Button::get_state()
 {
     return m_state;
+}
+
+bool Button::getOnIt()
+{
+    return m_onit;
 }

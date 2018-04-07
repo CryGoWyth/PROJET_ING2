@@ -12,7 +12,9 @@ class Button
         void survoler(sf::RenderWindow &window);
         void afficher(sf::RenderWindow &window, int x, int y);
         void set_state(bool s);
+        int gety();
         bool get_state();
+        bool getOnIt();
 
     private:
         sf::Font m_font;

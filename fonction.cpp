@@ -8,10 +8,9 @@ void Kosaraju(Graphe mongraphe)
     for(auto elem : mongraphe.get_especes())
         elem->set_marque(false);
 
-    std::cout << "Je suis dans la premiere etape de kosa" << std::endl << std::endl;
     ///On rempli la pile par ordre de fin de marquage des sommets
     for(auto elem: mongraphe.get_especes())
-      fillorder(*elem,pile); ///Convertir proprement
+        pile = fillorder(*elem); ///Convertir proprement
 
     ///On créer un graphe similaire à G sauf que l'on a inversé l'orientation des aretes
     Graphe transpo(transposition(mongraphe));
@@ -32,23 +31,21 @@ void Kosaraju(Graphe mongraphe)
     }
 }
 
-void fillorder(Espece v,std::stack<Espece> pile1)
+std::stack<Espece> fillorder(Espece v)
 {
-
+    std::stack<Espece> pile;
     ///On marque le sommet
     v.set_marque(true);
-    std::cout << "Je suis dans fillorder" << std::endl << std::endl;
 
     ///On marque les sommets adjacents
     for(auto elem : v.get_adjacents()){
-        std::cout << "Je suis dans la boucle for auto elem de fillorder" << std::endl;
         if(elem.get_marque()==false)
-            fillorder(elem,pile1);
+            fillorder(elem);
     }
 
     ///On stocke les sommets dans la Pile
-    pile1.push(v);
-
+    pile.push(v);
+    return pile;
 }
 
 Graphe transposition(Graphe mongraphe)

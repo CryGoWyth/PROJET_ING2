@@ -1,0 +1,13 @@
+12
+Bateau
+Orque
+Requin
+P_carnivore
+Loutre
+Phoque
+Baleine
+Krill
+P_herbivore
+Oursin
+Mollusque
+Algues
