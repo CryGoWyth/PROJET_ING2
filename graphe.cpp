@@ -84,7 +84,7 @@ void Graphe::evolution()
     sf::Time m_time = m_clock.getElapsedTime();
     //Toutes les 5 secondes ...
     if(m_time.asSeconds() >= 1){
-        std::cout << "Time : " << m_time.asSeconds() << std::endl;
+        std::cout << "Time : " << m_time.asSeconds() << std::endl; //Test
         //On appelle les fonctions d'évolution
         for(auto elem : m_especes){
             elem->evo_cap(m_especes);
@@ -205,6 +205,11 @@ void Graphe::load()
         file.close();
     }
     else std::cout << "Couldn't open the file" << std::endl;
+
+    for(auto elem : m_especes)
+    {
+        elem->load_vect(m_aretes);
+    }
 }
 
 int Graphe::display()

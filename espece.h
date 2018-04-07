@@ -12,7 +12,7 @@ class Espece
         Widgets *m_widgets;
         std::vector<Arete*> m_proies;
         std::vector<Arete*> m_predateurs;
-        int get_pop(Arete *a, std::vector<Espece*> m_especes);
+        int get_pop(Arete *a, std::vector<Espece*> m_especes, bool situation);
         int m_population, m_capacite, m_facteur; /// N, K, r
         int m_numS; ///ATTENTION!! : Numero du sommet
         int m_numAS; //Numero du plus petit sommet adjacent de numS
@@ -22,6 +22,9 @@ class Espece
     public :
         Espece(int x, int y, int nb, int val, int N, int K);
         ~Espece();
+
+        ///Remplissage vecteur préda et proie
+        void load_vect(std::vector<Arete*> m_aretes);
 
         ///Fonctions d'évolution
         void evo_pop(std::vector<Espece*> m_especes);

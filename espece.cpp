@@ -10,6 +10,22 @@ Espece::Espece(int x, int y, int nb, int val, int N, int K)
     ///Remplir les proies et predateurs
 }
 
+void Espece::load_vect(std::vector<Arete*> m_aretes)
+{
+    for(auto elem : m_aretes)
+    {
+        if(elem->get_first()->get_nb()==this->get_number())
+        {
+            m_proies.push_back(new Arete(elem->get_first(), elem->get_second(), elem->get_mabar()));
+        }
+
+        if(elem->get_second()->get_nb()==this->get_number())
+        {
+            m_predateurs.push_back(new Arete(elem->get_first(), elem->get_second(), elem->get_mabar()));
+        }
+    }
+}
+
 Espece::~Espece()
 {
     delete m_widgets;
@@ -18,11 +34,11 @@ Espece::~Espece()
 void Espece::evo_pop(std::vector<Espece*> m_especes)
 {
     ///N(t+1) = Nt + rNt(1-Nt/K)
-    //m_population = m_population + m_facteur * m_population * (1 - m_population/m_capacite);
+    m_population = m_population + m_facteur * m_population * (1 - m_population/m_capacite);
 
     //On soustrait ce que les prédateurs mangent
     for(auto elem : m_predateurs)
-        m_population = m_population - elem->get_mabar() * get_pop(elem, m_especes);
+        m_population = m_population - elem->get_mabar() * get_pop(elem, m_especes, true);
 }
 
 void Espece::evo_cap(std::vector<Espece*> m_especes)
@@ -31,7 +47,7 @@ void Espece::evo_cap(std::vector<Espece*> m_especes)
 
     ///K = Coeff * Nproie + ... (autant de proie qu'il y en a)
     for(auto elem : m_proies)
-        m_capacite = m_capacite + elem->get_mabar() * get_pop(elem, m_especes);
+        m_capacite = m_capacite + elem->get_mabar() * get_pop(elem, m_especes, false);
 }
 
 void Espece::dessiner(sf::RenderWindow &window, int nb)
@@ -64,10 +80,17 @@ Widgets* Espece::get_widgets()
     return m_widgets;
 }
 
-int Espece::get_pop(Arete *a, std::vector<Espece*> m_especes)
+int Espece::get_pop(Arete *a, std::vector<Espece*> m_especes, bool situation)
 {
+    if(situation==false){
     for(unsigned int i = 0; i  < m_especes.size(); i++)
-        if(m_especes[i]->get_widgets() == a->get_second()) return i;
+        if(m_especes[i]->get_widgets() == a->get_second()) return m_especes[i]->get_population();
+    }
+
+    if(situation==true){
+            for(unsigned int i = 0; i  < m_especes.size(); i++)
+        if(m_especes[i]->get_widgets() == a->get_first()) return m_especes[i]->get_population();
+    }
 
     return 0;
 }
