@@ -10,7 +10,7 @@
 class Graphe;
 
 void Kosaraju(Graphe monGraphe);
-std::stack<Espece> fillorder(Espece v);
+void fillorder(Espece v,std::stack<Espece> pile1);
 Graphe transposition(Graphe monGraphe);
 void DFS(Graphe monGraphe, int v);
 
