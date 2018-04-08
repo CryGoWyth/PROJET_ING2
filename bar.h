@@ -13,6 +13,7 @@ class Bar
         void dessiner(sf::RenderWindow &window, int nb);
         void mouvement(sf::RenderWindow &window, int nb);
         void update(int x, int y);
+        void set_value(int value);
         bool get_selected();
         std::string get_value();
 

@@ -30,8 +30,7 @@ void Graphe::gameWhile()
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window.close();
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) simul = false;//Si on appuie sur pause, on arrête la sim
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-                Kosaraju(this);
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) Kosaraju(*this);
         }
 
         nbControle = 0;
@@ -175,7 +174,16 @@ void Graphe::modifier()
             break;
         }
     }
-    if(!check) m_aretes.push_back(new Arete(m_especes[i]->get_widgets(), m_especes[j]->get_widgets(), 0));
+    if(!check){
+        for(auto elem1 : m_especes){
+            for(auto elem2 : m_especes){
+                if(elem1->get_number() == i && elem2->get_number() == j){
+                    m_aretes.push_back(new Arete(elem1->get_widgets(), elem2->get_widgets(), 0));
+                    break;
+                }
+            }
+        }
+    }
     ok = false;
 }
 
@@ -197,7 +205,7 @@ void Graphe::ajouter()
     while(sf::Mouse::isButtonPressed(sf::Mouse::Left));
     display();
     while(!sf::Mouse::isButtonPressed(sf::Mouse::Left));
-    for(unsigned int b = 0; a < m_especes.size(); a++){
+    for(unsigned int b = 0; a < m_especes.size(); b = 0, a++){
         for(auto elem : m_especes)
             if(elem->get_number() == a) b++;
         if(b == 0) break;
@@ -283,6 +291,9 @@ int Graphe::selectFamilie()
 
 void Graphe::creer()
 {
+    window.clear(sf::Color(15, 15, 15));
+    window.display();
+    while(sf::Mouse::isButtonPressed(sf::Mouse::Left));
     m_especes.erase(m_especes.begin(), m_especes.end());
     m_aretes.erase(m_aretes.begin(), m_aretes.end()); /// On efface le graphe present
     std::vector<Button*> mesButtons;
@@ -362,13 +373,8 @@ int Graphe::load()
             m_aretes.push_back(new Arete(m_especes[mx]->get_widgets(), m_especes[my]->get_widgets(), val));
         }
         file.close();
-    }else return 1;
-
-     for(auto elem : m_especes)
-    {
-        elem->load_vect(m_aretes);
     }
-
+    else return 1;
     return 0;
 }
 

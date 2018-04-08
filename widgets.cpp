@@ -92,6 +92,11 @@ void Widgets::update()
     mabar.update(m_x - 7, m_y + 3);
 }
 
+void Widgets::set_value(int value)
+{
+    mabar.set_value(value);
+}
+
 int Widgets::get_nbImage()
 {
     return nbImage;
@@ -99,12 +104,12 @@ int Widgets::get_nbImage()
 
 int Widgets::getmx()
 {
-    return m_x;
+    return (m_x - 23) + (background.getSize().x / 2);
 }
 
 int Widgets::getmy()
 {
-    return m_y;
+    return (m_y - 42) + (background.getSize().y / 2);
 }
 
 int Widgets::get_nb()

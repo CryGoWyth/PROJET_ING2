@@ -50,6 +50,11 @@ void Bar::dessiner(sf::RenderWindow &window, int nb)
     window.draw(m_button);
 }
 
+void Bar::set_value(int value)
+{
+    my = -(((value + 25) * 72) / 100) + 50;
+}
+
 void Bar::mouvement(sf::RenderWindow &window, int nb)
 {
     if((selected && !nb && sf::Mouse::isButtonPressed(sf::Mouse::Left)) || (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (sf::Mouse::getPosition(window)).x > m_x - 10 && (sf::Mouse::getPosition(window)).x < m_x + 10 && (sf::Mouse::getPosition(window)).y > m_y - 44 && (sf::Mouse::getPosition(window)).y < m_y + 44)){

@@ -11,9 +11,9 @@
 
 class Graphe;
 
-void Kosaraju(Graphe *monGraphe) ;
-void fillorder(Graphe *monGraphe,Espece *v,std::stack<Espece*> &pile1);
-Graphe* transposition(Graphe *graf);
-void DFS(Graphe *monGraphe, int v);
+void Kosaraju(Graphe &monGraphe) ;
+void fillorder(Graphe monGraphe,Espece *v,std::stack<Espece*> &pile1);
+Graphe transposition(Graphe &monGraphe);
+void DFS(Graphe monGraphe, int v);
 
 #endif // PROTOTYPE_H_INCLUDED

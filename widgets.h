@@ -13,6 +13,7 @@ class Widgets
         void mouvement(sf::RenderWindow &window, int nb);
         void update();
         void set_Texture(sf::Texture *mat, int i);
+        void set_value(int value);
         bool get_selected();
         int get_nbImage();
         int get_mabar();

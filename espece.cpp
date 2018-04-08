@@ -6,7 +6,7 @@ Espece::Espece(int x, int y, int nb, int val, int N, int K)
     m_widgets = new Widgets(x, y, nb, val);
     m_population = N;
     m_capacite = K;
-    m_numS=nb;
+
     ///Remplir les proies et predateurs
 }
 
@@ -21,8 +21,10 @@ void Espece::evo_pop(std::vector<Espece*> m_especes)
     //m_population = m_population + m_facteur * m_population * (1 - m_population/m_capacite);
 
     //On soustrait ce que les prédateurs mangent
-    for(auto elem : m_predateurs)
+    for(auto elem : m_predateurs){
         m_population = m_population - elem->get_mabar() * get_pop(elem, m_especes);
+        this->get_widgets()->set_value(m_population);
+    }
 }
 
 void Espece::evo_cap(std::vector<Espece*> m_especes)
@@ -109,56 +111,5 @@ std::vector<Espece> Espece::get_adjacents() const
 
 std::vector<Arete*> Espece::get_predateurs()
 {
-
     return m_predateurs;
-
-
-}
-
-std::vector<Arete*> Espece::get_proies()
-{
-
-    return m_proies;
-
-}
-
-
-void Espece::set_predateurs(std::vector<Arete*> predateur)
-{
-
-    for(auto elem: predateur)
-    {
-
-
-        m_predateurs.push_back(elem);
-    }
-
-}
-
-void Espece::set_proies(std::vector<Arete*> proie)
-{
-
-    for(auto elem: proie)
-    {
-
-        m_proies.push_back(elem);
-
-    }
-
-}
-
-void Espece::load_vect(std::vector<Arete*> m_aretes)
-{
-    for(auto elem : m_aretes)
-    {
-        if(elem->get_first()->get_nb()==this->get_number())
-        {
-            m_proies.push_back(new Arete(elem->get_first(), elem->get_second(), elem->get_mabar()));
-        }
-
-        if(elem->get_second()->get_nb()==this->get_number())
-        {
-            m_predateurs.push_back(new Arete(elem->get_first(), elem->get_second(), elem->get_mabar()));
-        }
-    }
 }
