@@ -1,13 +1,27 @@
 #include "espece.h"
 
-Espece::Espece(int x, int y, int nb, int val, int N, int K)
+Espece::Espece(int x, int y, int nb, int val, int K)
 {
     m_facteur = 1;
     m_widgets = new Widgets(x, y, nb, val);
-    m_population = N;
+    m_population = val;
     m_capacite = K;
+}
 
-    ///Remplir les proies et predateurs
+void Espece::load_vect(std::vector<Arete*> m_aretes)
+{
+    for(auto elem : m_aretes)
+    {
+        if(elem->get_first()->get_nb()==this->get_number())
+        {
+            m_proies.push_back(new Arete(elem->get_first(), elem->get_second(), elem->get_mabar()));
+        }
+
+        if(elem->get_second()->get_nb()==this->get_number())
+        {
+            m_predateurs.push_back(new Arete(elem->get_first(), elem->get_second(), elem->get_mabar()));
+        }
+    }
 }
 
 Espece::~Espece()
@@ -21,10 +35,10 @@ void Espece::evo_pop(std::vector<Espece*> m_especes)
     //m_population = m_population + m_facteur * m_population * (1 - m_population/m_capacite);
 
     //On soustrait ce que les prédateurs mangent
-    for(auto elem : m_predateurs){
-        m_population = m_population - elem->get_mabar() * get_pop(elem, m_especes);
-        this->get_widgets()->set_value(m_population);
-    }
+    for(auto elem : m_predateurs)
+        m_population = m_population - elem->get_mabar() * get_pop(elem, m_especes, true);
+
+    this->get_widgets()->set_value(m_population);
 }
 
 void Espece::evo_cap(std::vector<Espece*> m_especes)
@@ -33,17 +47,23 @@ void Espece::evo_cap(std::vector<Espece*> m_especes)
 
     ///K = Coeff * Nproie + ... (autant de proie qu'il y en a)
     for(auto elem : m_proies)
-        m_capacite = m_capacite + elem->get_mabar() * get_pop(elem, m_especes);
+        m_capacite = m_capacite + elem->get_mabar() * get_pop(elem, m_especes, false);
 }
 
 void Espece::dessiner(sf::RenderWindow &window, int nb)
 {
+    m_population = m_widgets->get_mabar();
     m_widgets->dessiner(window, nb);
 }
 
 int Espece::get_population()
 {
     return m_population;
+}
+
+int Espece::get_capacite()
+{
+    return m_capacite;
 }
 
 int Espece::get_cap()
@@ -66,10 +86,17 @@ Widgets* Espece::get_widgets()
     return m_widgets;
 }
 
-int Espece::get_pop(Arete *a, std::vector<Espece*> m_especes)
+int Espece::get_pop(Arete *a, std::vector<Espece*> m_especes, bool situation)
 {
+    if(situation==false){
     for(unsigned int i = 0; i  < m_especes.size(); i++)
         if(m_especes[i]->get_widgets() == a->get_second()) return m_especes[i]->get_population();
+    }
+
+    if(situation==true){
+            for(unsigned int i = 0; i  < m_especes.size(); i++)
+        if(m_especes[i]->get_widgets() == a->get_first()) return m_especes[i]->get_population();
+    }
 
     return 0;
 }
@@ -94,6 +121,16 @@ void Espece::set_numS(int num)
     m_numS=num;
 }
 
+int Espece::get_numAS()
+{
+    return m_numAS;
+}
+
+void Espece::set_numAS(int numA)
+{
+    m_numAS=numA;
+}
+
 bool Espece::get_marque()
 {
     return m_marque;
@@ -112,4 +149,9 @@ std::vector<Espece> Espece::get_adjacents() const
 std::vector<Arete*> Espece::get_predateurs()
 {
     return m_predateurs;
+}
+
+std::vector<Arete*> Espece::get_proies()
+{
+    return m_proies;
 }

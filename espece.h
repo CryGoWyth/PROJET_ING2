@@ -12,7 +12,7 @@ class Espece
         Widgets *m_widgets;
         std::vector<Arete*> m_proies;
         std::vector<Arete*> m_predateurs;
-        int get_pop(Arete *a, std::vector<Espece*> m_especes);
+        int get_pop(Arete *a, std::vector<Espece*> m_especes, bool situation);
         int m_population, m_capacite, m_facteur; /// N, K, r
         int m_numS; ///ATTENTION!! : Numero du sommet
         int m_numAS; //Numero du plus petit sommet adjacent de numS
@@ -20,8 +20,11 @@ class Espece
         std::vector<Espece> m_adjacents;
 
     public :
-        Espece(int x, int y, int nb, int val, int N, int K);
+        Espece(int x, int y, int nb, int N, int K);
         ~Espece();
+
+        ///Remplissage vecteur préda et proie
+        void load_vect(std::vector<Arete*> m_aretes);
 
         ///Fonctions d'évolution
         void evo_pop(std::vector<Espece*> m_especes);
@@ -30,19 +33,24 @@ class Espece
 
 
         ///Getter et Setter
-        std::vector<Arete*>get_predateurs();
-        std::vector<Espece> get_adjacents() const;
         int get_number();
         int get_selected();
         int get_population();
+        int get_capacite();
         int get_cap();
         int get_fact();
         int get_numS();
+        int get_numAS();
         bool get_marque();
+        std::vector<Espece> get_adjacents() const;
         Widgets* get_widgets();
+        std::vector<Arete*> get_predateurs();
+        std::vector<Arete*> get_proies();
+
 
         void set_numS(int num);
         void set_fact(int r);
+        void set_numAS(int numA);
         void set_marque(bool m);
         void set_adjacents(std::vector<Espece> A);
 };
