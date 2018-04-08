@@ -14,6 +14,7 @@ class Espece
         std::vector<Arete*> m_predateurs;
         int get_pop(Arete *a, std::vector<Espece*> m_especes, bool situation);
         int m_population, m_capacite, m_facteur; /// N, K, r
+        int popupdate;
         int m_numS; ///ATTENTION!! : Numero du sommet
         int m_numAS; //Numero du plus petit sommet adjacent de numS
         bool m_marque; //Bool de marquage
@@ -31,6 +32,7 @@ class Espece
         void evo_pop(std::vector<Espece*> m_especes);
         void evo_cap(std::vector<Espece*> m_especes);
         void dessiner(sf::RenderWindow &window, int nb);
+        void update();
 
 
         ///Getter et Setter

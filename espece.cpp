@@ -27,18 +27,27 @@ Espece::~Espece()
     delete m_widgets;
 }
 
+void Espece::update()
+{
+    m_population = popupdate;
+}
+
 void Espece::evo_pop(std::vector<Espece*> m_especes)
 {
     ///N(t+1) = Nt + rNt(1-Nt/K)
-    if(m_capacite != 0)
-        m_population = m_population + m_facteur * m_population * (1 - m_population / m_capacite);
+    float f;
+    std::cout << "Pop first : " << m_population << ", fact : " << m_facteur << ", cap : " << m_capacite << std::endl;
+    if(m_capacite > 0){
+        f = float(m_population) + (float(m_facteur) * float(m_population) * (1 - (float(m_population) / float(m_capacite))));
+        popupdate = f;
+    }
 
     //On soustrait ce que les prédateurs mangent
-    std::cout << "Capacite : " << m_capacite << std::endl;
+    std::cout << "Capacite : " << m_capacite << ", pop : " << f << std::endl;
     for(auto elem : m_predateurs)
-        m_population = m_population - elem->get_mabar() * get_pop(elem, m_especes, true);
-
-    this->get_widgets()->set_value(m_population);
+        popupdate = popupdate - (elem->get_mabar() * m_especes[elem->get_first()->get_nb()]->get_population());//get_pop(elem, m_especes, true);
+    std::cout << "Fresh pop : " << popupdate << std::endl;
+    this->get_widgets()->set_value(popupdate);
 }
 
 void Espece::evo_cap(std::vector<Espece*> m_especes)
@@ -47,9 +56,9 @@ void Espece::evo_cap(std::vector<Espece*> m_especes)
 
     ///K = Coeff * Nproie + ... (autant de proie qu'il y en a)
     for(auto elem : m_proies){
-        std::cout << "Get mabar de " << this->get_number() << " : " << elem->get_mabar() << ", pop : " << get_pop(elem, m_especes, false) << std::endl;
+        std::cout << "Get mabar de " << this->get_number() << " : " << elem->get_mabar() << ", pop : " <<  m_especes[elem->get_second()->get_nb()]->get_population() << ", nb : " << elem->get_first()->get_nb()<< std::endl;
 
-        m_capacite = m_capacite + elem->get_mabar() * get_pop(elem, m_especes, false);
+        m_capacite = m_capacite + (elem->get_mabar() *  m_especes[elem->get_second()->get_nb()]->get_population());///get_pop(elem, m_especes, false);
     }
     std::cout << "Fresh cap " << this->get_number() << " : " << m_capacite << std::endl;
 }
@@ -57,6 +66,10 @@ void Espece::evo_cap(std::vector<Espece*> m_especes)
 void Espece::dessiner(sf::RenderWindow &window, int nb)
 {
     m_population = m_widgets->get_mabar();
+    //for(auto elem : m_predateurs)
+        //std::cout << "Predateur : " << get_population() << std::endl;
+    if(m_population == 0)
+        while(1 == 1);
     m_widgets->dessiner(window, nb);
 }
 
@@ -99,13 +112,21 @@ Widgets* Espece::get_widgets()
 int Espece::get_pop(Arete *a, std::vector<Espece*> m_especes, bool situation)
 {
     if(situation==false){
-    for(unsigned int i = 0; i  < m_especes.size(); i++)
-        if(m_especes[i]->get_number() == a->get_second()->get_nb()) return m_especes[i]->get_population();
+        for(unsigned int i = 0; i  < m_especes.size(); i++){
+            if(m_especes[i]->get_number() == a->get_second()->get_nb()){
+                std::cout << "1-Pop : " << m_especes[i]->get_population() << ", i = " << i << std::endl;
+                return m_especes[i]->get_population();
+            }
+        }
     }
 
-    if(situation==true){
-            for(unsigned int i = 0; i  < m_especes.size(); i++)
-        if(m_especes[i]->get_number() == a->get_first()->get_nb()) return m_especes[i]->get_population();
+    if(situation){
+        for(unsigned int i = 0; i  < m_especes.size(); i++){
+            if(m_especes[i]->get_number() == a->get_second()->get_nb()){
+                std::cout << "2-Pop : " << m_especes[i]->get_population() << ", i = " << i << std::endl;
+                return m_especes[i]->get_population();
+            }
+        }
     }
 
     return 0;

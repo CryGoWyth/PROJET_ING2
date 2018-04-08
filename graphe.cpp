@@ -85,12 +85,16 @@ void Graphe::evolution()
     sf::Time m_time = m_clock.getElapsedTime();
     if(m_time.asSeconds() >= 1){//Toutes les 5 secondes ...
         std::cout << "Time : " << m_time.asSeconds() << std::endl;
-        for(auto elem : m_especes){//On appelle les fonctions d'évolution
+
+        for(auto elem : m_especes)//On appelle les fonctions d'évolution
             elem->evo_cap(m_especes);
+
+        std::cout << std::endl << std::endl;
+        for(auto elem : m_especes)
             elem->evo_pop(m_especes);
-            std::cout << std::endl << elem->get_proies().size() << std::endl;
-            std::cout << std::endl << elem->get_predateurs().size() << std::endl;
-        }
+        std::cout << std::endl << std::endl;
+        for(auto elem : m_especes)
+            elem->update();
         m_clock.restart();//On remet à 0 la clock, logique ...
     }
 }
@@ -406,16 +410,13 @@ int Graphe::load()
             m_especes.push_back(new Espece(mx, my, nb, val, 0));
             m_especes[m_especes.size() - 1]->get_widgets()->set_Texture(&m_texture[nbImage], nbImage);
         }
-        std::cout << "Begin : arete" << std::endl;
         file >> tailleArete;
         for(int i = 0; i < tailleArete; i++){
             file >> mx >> my >> val;
             m_aretes.push_back(new Arete(m_especes[getSommet(mx)]->get_widgets(), m_especes[getSommet(my)]->get_widgets(), val));
         }
         file.close();
-        std::cout << "Before load_vect" << std::endl;
         for(auto elem : m_especes) elem->load_vect(m_aretes);
-        std::cout << "Before music" << std::endl;
         if(nbType == 1) music.openFromFile("audio/foret.wav");
         else if(nbType == 2) music.openFromFile("audio/mer.wav");
         music.play();
@@ -457,6 +458,8 @@ std::string Graphe::proposerFichier()
         while(window.pollEvent(e)){
             if(e.type == sf::Event::KeyPressed){
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace) && buf.size() > 0) buf.pop_back();
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && (sf::Mouse::getPosition(window).x < bg.getPosition().x || sf::Mouse::getPosition(window).x > bg.getPosition().x + bg.getSize().x || sf::Mouse::getPosition(window).y < bg.getPosition().y || sf::Mouse::getPosition(window).y > bg.getPosition().y + bg.getSize().y))
+                    return "txt";
                 else if(e.key.code < 36 && e.key.code >= 0 && buf.size() < 27){
                     buf += char(e.key.code + ((sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ? 65 : 97)));
                 }
