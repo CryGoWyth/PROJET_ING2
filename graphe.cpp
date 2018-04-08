@@ -160,13 +160,15 @@ void Graphe::modifier()
     ok = true;
     bool check = false;
     information("Cliquez sur une premiere espece : le prédateur");
-    while(sf::Mouse::isButtonPressed(sf::Mouse::Left));
     display();
+    while(sf::Mouse::isButtonPressed(sf::Mouse::Left));
     while(i == -1) i = selectionner();
+    if(i == -2){ok = false;return;}
     information("Cliquez sur deuxieme espece : la proie");
     display();
     while(sf::Mouse::isButtonPressed(sf::Mouse::Left));
     while(j == -1 || j == i) j = selectionner();
+    if(j == -2){ok = false;return;} /// on quitte
 
     for(auto it = m_aretes.begin(); it != m_aretes.end(); it++){
         if(((*it)->get_first()->get_nb() == i && (*it)->get_second()->get_nb() == j) || ((*it)->get_first()->get_nb() == j && (*it)->get_second()->get_nb() == i)){
@@ -190,9 +192,10 @@ void Graphe::modifier()
 int Graphe::selectionner()
 {
     for(auto elem : m_especes){
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Mouse::getPosition(window).x > elem->get_widgets()->getmx() && sf::Mouse::getPosition(window).x < elem->get_widgets()->getmx() + 100 && sf::Mouse::getPosition(window).y > elem->get_widgets()->getmy() - 50 && sf::Mouse::getPosition(window).y < elem->get_widgets()->getmy() + 50)
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Mouse::getPosition(window).x > elem->get_widgets()->getmx() - 50 && sf::Mouse::getPosition(window).x < elem->get_widgets()->getmx() + 50 && sf::Mouse::getPosition(window).y > elem->get_widgets()->getmy() - 50 && sf::Mouse::getPosition(window).y < elem->get_widgets()->getmy() + 50)
             return elem->get_number();
     }
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) return -2;
     display();
     return -1;
 }
@@ -201,6 +204,7 @@ void Graphe::ajouter()
 {
     ok = true;
     int i = selectFamilie(), a = 0;
+    if(i == - 2){ok = false; return;}
     information("Cliquez pour faire apparaitre une espece");
     while(sf::Mouse::isButtonPressed(sf::Mouse::Left));
     display();
@@ -210,7 +214,7 @@ void Graphe::ajouter()
             if(elem->get_number() == a) b++;
         if(b == 0) break;
     }
-    m_especes.push_back(new Espece(sf::Mouse::getPosition(window).x - 5, sf::Mouse::getPosition(window).y, a, 0, 0, 0));
+    m_especes.push_back(new Espece(sf::Mouse::getPosition(window).x - 5, sf::Mouse::getPosition(window).y, a, 0, 0));
     m_especes[m_especes.size()-1]->get_widgets()->set_Texture(&m_texture[i], i);
     ok = false;
 }
@@ -273,6 +277,10 @@ int Graphe::selectFamilie()
         window.draw(bg);
         window.draw(m_text);
 
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && (sf::Mouse::getPosition(window).x < bg.getPosition().x || sf::Mouse::getPosition(window).x > bg.getPosition().x + bg.getSize().x || sf::Mouse::getPosition(window).y < bg.getPosition().y || sf::Mouse::getPosition(window).y < bg.getPosition().y + bg.getSize().y)){
+            std::cout << "Drop off" << std::endl;
+            return -2;
+        }
         for(int i = 0; i < mesButtons.size(); i++){
             mesButtons[i]->afficher(window, window.getSize().x / 4 + 30, bg.getPosition().y + 50 + i * 35);
             m_sprite.setTexture(m_texture[i]);
@@ -364,7 +372,7 @@ int Graphe::load()
         loadImage();
         for(int i = 0; i < tailleEspece; i++){
             file >> nb >> val >> mx >> my >> nbImage;
-            m_especes.push_back(new Espece(mx, my, nb, val, 0, 0));
+            m_especes.push_back(new Espece(mx, my, nb, val, 0));
             m_especes[m_especes.size() - 1]->get_widgets()->set_Texture(&m_texture[nbImage], nbImage);
         }
         file >> tailleArete;
@@ -373,6 +381,7 @@ int Graphe::load()
             m_aretes.push_back(new Arete(m_especes[mx]->get_widgets(), m_especes[my]->get_widgets(), val));
         }
         file.close();
+        for(auto elem : m_especes) elem->load_vect(m_aretes);
     }
     else return 1;
     return 0;

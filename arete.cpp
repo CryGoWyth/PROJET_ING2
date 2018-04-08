@@ -38,7 +38,7 @@ void Arete::dessiner(sf::RenderWindow &window, int nb)
     window.draw(line);
     window.draw(background);
     mabar.dessiner(window, nb);
-    window.draw(circle);
+    //window.draw(circle);
 }
 
 bool Arete::get_selected()

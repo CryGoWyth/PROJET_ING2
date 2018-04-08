@@ -2,7 +2,7 @@
 
 Bar::Bar(int x, int y, int val) : m_x(x), m_y(y), selected(false)
 {
-    my = -(((val + 25) * 72) / 100) + 50;
+    my = -(((val + 125) * 72) / 500) + 50;
     font.loadFromFile("arial.ttf");
     m_text.setFont(font);
     m_text.setColor(sf::Color::White);
@@ -52,7 +52,7 @@ void Bar::dessiner(sf::RenderWindow &window, int nb)
 
 void Bar::set_value(int value)
 {
-    my = -(((value + 25) * 72) / 100) + 50;
+    my = -(((value + 125) * 72) / 500) + 50;
 }
 
 void Bar::mouvement(sf::RenderWindow &window, int nb)
@@ -85,7 +85,7 @@ std::string Bar::get_value()
 {
     std::ostringstream test;
     int i = 0;
-    i = (((100 - (my + 50)) * 100) / 72) - 25;
+    i = (((100 - (my + 50)) * 500) / 72) - 125;
     test << i;
     return test.str();
 }
