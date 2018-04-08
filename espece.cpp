@@ -66,10 +66,6 @@ void Espece::evo_cap(std::vector<Espece*> m_especes)
 void Espece::dessiner(sf::RenderWindow &window, int nb)
 {
     m_population = m_widgets->get_mabar();
-    //for(auto elem : m_predateurs)
-        //std::cout << "Predateur : " << get_population() << std::endl;
-    if(m_population == 0)
-        while(1 == 1);
     m_widgets->dessiner(window, nb);
 }
 
