@@ -25,6 +25,7 @@ class Espece
 
         ///Remplissage vecteur préda et proie
         void load_vect(std::vector<Arete*> m_aretes);
+        void eraseVect();
 
         ///Fonctions d'évolution
         void evo_pop(std::vector<Espece*> m_especes);

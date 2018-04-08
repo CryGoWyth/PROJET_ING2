@@ -81,6 +81,12 @@ void Espece::set_fact(int r)
     m_facteur = r;
 }
 
+void Espece::eraseVect()
+{
+    m_predateurs.erase(m_predateurs.begin(), m_predateurs.end());
+    m_proies.erase(m_proies.begin(), m_proies.end());
+}
+
 Widgets* Espece::get_widgets()
 {
     return m_widgets;

@@ -10,6 +10,7 @@
 #include <sstream>
 #include <fstream>
 #include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
 
 class Graphe
 {
@@ -45,6 +46,7 @@ class Graphe
         int nbControle, nbType;
         bool ok, simul;
         Menu m_menu;
+        sf::Music music;
         sf::Font m_font; /// Ecriture sfml
         sf::Text m_text;
         sf::RectangleShape bg;

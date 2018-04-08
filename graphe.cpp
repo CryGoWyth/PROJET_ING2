@@ -5,6 +5,8 @@ Graphe::Graphe(int type) : window(sf::VideoMode(1024, 720), "ING2_PROJECT"), ok(
     m_font.loadFromFile("arial.ttf");
     m_text.setFont(m_font);
     loadImage();
+    music.setVolume(100);
+    music.setLoop(true);
 }
 
 Graphe::Graphe(const Graphe &monGraphe) : T1(&Graphe::evolution, this), simul(false)
@@ -53,8 +55,13 @@ void Graphe::action(int nb)
     else if(nb == 3) ajouter(); /// ajouter fait -> choix famille
     else if(nb == 4) modifier();/// modifier
     else if(nb == 5) supprimer();/// supprimer
-    else if(nb == 6) simul = true, m_clock.restart();/// Simulation
-    //Le bouléen passe à vrai pour indiqué que nous somme en simulation
+    else if(nb == 6){
+        if(simul) simul = false;
+        else{
+            save(); ///Le bouléen passe à vrai pour indiqué que nous somme en simulation
+            simul = true, m_clock.restart();/// Simulation
+        }
+    }
 }
 
 void Graphe::information(std::string msg)
@@ -79,6 +86,8 @@ void Graphe::evolution()
         for(auto elem : m_especes){//On appelle les fonctions d'évolution
             elem->evo_cap(m_especes);
             elem->evo_pop(m_especes);
+            std::cout << std::endl << elem->get_proies().size() << std::endl;
+            std::cout << std::endl << elem->get_predateurs().size() << std::endl;
         }
         m_clock.restart();//On remet à 0 la clock, logique ...
     }
@@ -86,6 +95,8 @@ void Graphe::evolution()
 
 void Graphe::mainMenu()
 {
+    music.openFromFile("audio/menu_principal.wav");
+    music.play();
     sf::Text choix1 = m_text, choix2 = m_text, titre = m_text;
     sf::RectangleShape support;
     titre.setCharacterSize(64);
@@ -216,6 +227,7 @@ void Graphe::ajouter()
     }
     m_especes.push_back(new Espece(sf::Mouse::getPosition(window).x - 5, sf::Mouse::getPosition(window).y, a, 0, 0));
     m_especes[m_especes.size()-1]->get_widgets()->set_Texture(&m_texture[i], i);
+    m_especes[m_especes.size()-1]->load_vect(m_aretes);
     ok = false;
 }
 
@@ -277,10 +289,8 @@ int Graphe::selectFamilie()
         window.draw(bg);
         window.draw(m_text);
 
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && (sf::Mouse::getPosition(window).x < bg.getPosition().x || sf::Mouse::getPosition(window).x > bg.getPosition().x + bg.getSize().x || sf::Mouse::getPosition(window).y < bg.getPosition().y || sf::Mouse::getPosition(window).y < bg.getPosition().y + bg.getSize().y)){
-            std::cout << "Drop off" << std::endl;
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && (sf::Mouse::getPosition(window).x < bg.getPosition().x || sf::Mouse::getPosition(window).x > bg.getPosition().x + bg.getSize().x || sf::Mouse::getPosition(window).y < bg.getPosition().y || sf::Mouse::getPosition(window).y > bg.getPosition().y + bg.getSize().y))
             return -2;
-        }
         for(int i = 0; i < mesButtons.size(); i++){
             mesButtons[i]->afficher(window, window.getSize().x / 4 + 30, bg.getPosition().y + 50 + i * 35);
             m_sprite.setTexture(m_texture[i]);
@@ -299,6 +309,7 @@ int Graphe::selectFamilie()
 
 void Graphe::creer()
 {
+    music.stop();
     window.clear(sf::Color(15, 15, 15));
     window.display();
     while(sf::Mouse::isButtonPressed(sf::Mouse::Left));
@@ -333,6 +344,9 @@ void Graphe::creer()
                 nbType = i + 1; /// Car les univers sont : 1, 2, 3
                 loadImage(); /// On charge ensuite les images du bon univers
                 for(auto elem : mesButtons) delete elem;
+                if(nbType == 1) music.openFromFile("audio/foret.wav");
+                else if(nbType == 2) music.openFromFile("audio/mer.wav");
+                music.play();
                 return;
             }
         }
@@ -353,12 +367,18 @@ void Graphe::save()
         for(auto elem : m_aretes)
             file << elem->get_first()->get_nb() << ' ' << elem->get_second()->get_nb() << ' ' << elem->get_mabar() << '\n';
         file.close();
+        for(auto elem : m_especes){
+            elem->eraseVect();
+            elem->load_vect(m_aretes);
+        }
     }
+
     else return;
 }
 
 int Graphe::load()
 {
+    music.stop();
     m_especes.erase(m_especes.begin(), m_especes.end());
     m_aretes.erase(m_aretes.begin(), m_aretes.end());
 
@@ -382,6 +402,9 @@ int Graphe::load()
         }
         file.close();
         for(auto elem : m_especes) elem->load_vect(m_aretes);
+        if(nbType == 1) music.openFromFile("audio/foret.wav");
+        else if(nbType == 2) music.openFromFile("audio/mer.wav");
+        music.play();
     }
     else return 1;
     return 0;
