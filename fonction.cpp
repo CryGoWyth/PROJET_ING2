@@ -7,9 +7,11 @@
 #include "widgets.h"
 #include "prototype.h"
 
-void Kosaraju(Graphe *mongraphe)
+void Kosaraju(Graphe *mongraphe,std::vector<std::vector<int>> &compo)
 {
+    std::vector<int> connexe;
     std::stack<Espece*> pile;
+    int i=1;
 
     ///On enleve la marque de tous les sommets du graphe au cas où
     for(auto elem : mongraphe->get_especes())
@@ -48,10 +50,15 @@ void Kosaraju(Graphe *mongraphe)
         if(transpo->get_especes()[v]->get_marque()==false)
         {
 
-            DFS(transpo,v);
+            DFS(transpo,v,connexe);
             //std::cout << "Sortie du gros DFS ";
-            std::cout << std::endl << std::endl << std::endl;
-
+            std::cout << " i= " << i << std::endl << std::endl << std::endl;
+            if(connexe.size()>2)
+            {
+                compo.push_back(connexe);
+            }
+            connexe.erase(connexe.begin(),connexe.end());
+            i++;
         }
 
 
@@ -115,12 +122,13 @@ Graphe* transposition(Graphe *mongraphe)
     return M;
 }
 
-void DFS(Graphe *graf,int v)
+void DFS(Graphe *graf,int v,std::vector<int> &connexe)
 {
 
 
     graf->get_especes()[v]->set_marque(true);
     std::cout << v << " ";
+    connexe.push_back(v);
 
 
 
@@ -129,18 +137,18 @@ void DFS(Graphe *graf,int v)
     int numero=-1;
 
 
-        for(auto elem: tomato)
+    for(auto elem: tomato)
+    {
+
+
+        numero=elem->get_first()->get_nb();
+        if(graf->get_especes()[numero]->get_marque()==false)
         {
-
-
-            numero=elem->get_first()->get_nb();
-            if(graf->get_especes()[numero]->get_marque()==false)
-            {
-                DFS(graf,numero);
-            }
-
-
+            DFS(graf,numero,connexe);
         }
+
+
+    }
 
 
 
