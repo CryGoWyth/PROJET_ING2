@@ -6,7 +6,7 @@ Espece::Espece(int x, int y, int nb, int val, int N, int K)
     m_widgets = new Widgets(x, y, nb, val);
     m_population = N;
     m_capacite = K;
-
+    m_numS=nb;
     ///Remplir les proies et predateurs
 }
 
@@ -105,4 +105,60 @@ void Espece::set_marque(bool m)
 std::vector<Espece> Espece::get_adjacents() const
 {
     return m_adjacents;
+}
+
+std::vector<Arete*> Espece::get_predateurs()
+{
+
+    return m_predateurs;
+
+
+}
+
+std::vector<Arete*> Espece::get_proies()
+{
+
+    return m_proies;
+
+}
+
+
+void Espece::set_predateurs(std::vector<Arete*> predateur)
+{
+
+    for(auto elem: predateur)
+    {
+
+
+        m_predateurs.push_back(elem);
+    }
+
+}
+
+void Espece::set_proies(std::vector<Arete*> proie)
+{
+
+    for(auto elem: proie)
+    {
+
+        m_proies.push_back(elem);
+
+    }
+
+}
+
+void Espece::load_vect(std::vector<Arete*> m_aretes)
+{
+    for(auto elem : m_aretes)
+    {
+        if(elem->get_first()->get_nb()==this->get_number())
+        {
+            m_proies.push_back(new Arete(elem->get_first(), elem->get_second(), elem->get_mabar()));
+        }
+
+        if(elem->get_second()->get_nb()==this->get_number())
+        {
+            m_predateurs.push_back(new Arete(elem->get_first(), elem->get_second(), elem->get_mabar()));
+        }
+    }
 }

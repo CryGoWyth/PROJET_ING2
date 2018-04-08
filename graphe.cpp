@@ -31,7 +31,7 @@ void Graphe::gameWhile()
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window.close();
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) simul = false;//Si on appuie sur pause, on arrête la sim
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-                Kosaraju(*this);
+                Kosaraju(this);
         }
 
         nbControle = 0;
@@ -362,8 +362,13 @@ int Graphe::load()
             m_aretes.push_back(new Arete(m_especes[mx]->get_widgets(), m_especes[my]->get_widgets(), val));
         }
         file.close();
+    }else return 1;
+
+     for(auto elem : m_especes)
+    {
+        elem->load_vect(m_aretes);
     }
-    else return 1;
+
     return 0;
 }
 
