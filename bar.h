@@ -21,7 +21,8 @@ class Bar
         sf::RectangleShape m_button, m_bar, l1, l2, l3, l4, background;
         sf::Text m_text;
         sf::Font font;
-        int m_x, m_y, my;
+        int m_x, m_y;
+        float my;
         bool selected;
 };
 

@@ -24,7 +24,7 @@ class Arete
 
     private:
         Widgets *first, *second;
-        sf::RectangleShape line, background;
+        sf::RectangleShape line, background, droite, gauche;
         sf::CircleShape circle;
         Bar mabar;
 };

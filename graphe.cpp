@@ -26,13 +26,15 @@ Graphe::~Graphe()
 void Graphe::gameWhile()
 {
     int state = -1;
+    std::vector<std::vector<int> > compo_connexe;
     mainMenu();
     while (window.isOpen()){
         sf::Event event;
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window.close();
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) simul = false;//Si on appuie sur pause, on arrête la sim
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) Kosaraju(*this);
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) Kosaraju(this, compo_connexe);
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+                for(auto elem : m_aretes) std::cout << "Arete : " << elem->get_first()->get_nb() << ", " << elem->get_second()->get_nb() << std::endl;
         }
 
         nbControle = 0;
@@ -239,7 +241,7 @@ void Graphe::loadImage()
     m_texture.erase(m_texture.begin(), m_texture.end());
     if(nbType == 1) buf = "pics/image_graphe1/", taille = 14;
     else if(nbType == 2) buf = "pics/image_graphe2/", taille = 12;
-    else if(nbType == 3) buf = "pics/image_graphe3/", taille = 12;
+    else if(nbType == 3) buf = "pics/image_graphe3/", taille = 11;
 
     for(int i = 0; i < taille; i++){
         ss << buf << "img" << i << ".png";
@@ -254,7 +256,7 @@ void createButton(std::vector<Button*> &mesButtons, int nbType)
     std::string buf, buffer; int taille = 0, mysize = 0;
     if(nbType == 1) buf = "pics/image_graphe1/", taille = 14;
     else if(nbType == 2) buf = "pics/image_graphe2/", taille = 12;
-    else if(nbType == 3) buf = "pics/image_graphe3/", taille = 12;
+    else if(nbType == 3) buf = "pics/image_graphe3/", taille = 11;
 
     std::ifstream file(buf + "fichier.txt", std::ios::in);
     file >> mysize;
@@ -318,6 +320,7 @@ void Graphe::creer()
     std::vector<Button*> mesButtons;
     mesButtons.push_back(new Button("Foret"));
     mesButtons.push_back(new Button("Ocean")); /// Creation des boutons
+    mesButtons.push_back(new Button("Desert"));
 
     bg.setSize(sf::Vector2f(window.getSize().x / 2 + 40, 3 * 35 + 70));
     bg.setPosition((window.getSize().x / 2) - (bg.getSize().x / 2), (window.getSize().y / 2) - (bg.getSize().y / 2));
@@ -352,6 +355,14 @@ void Graphe::creer()
         }
         window.display();
     }
+}
+
+int Graphe::getSommet(int nb)
+{
+    for(int i = 0; i < m_especes.size(); i++)
+        if(m_especes[i]->get_number() == nb) return i;
+
+    return 0;
 }
 
 void Graphe::save()
@@ -395,13 +406,16 @@ int Graphe::load()
             m_especes.push_back(new Espece(mx, my, nb, val, 0));
             m_especes[m_especes.size() - 1]->get_widgets()->set_Texture(&m_texture[nbImage], nbImage);
         }
+        std::cout << "Begin : arete" << std::endl;
         file >> tailleArete;
         for(int i = 0; i < tailleArete; i++){
             file >> mx >> my >> val;
-            m_aretes.push_back(new Arete(m_especes[mx]->get_widgets(), m_especes[my]->get_widgets(), val));
+            m_aretes.push_back(new Arete(m_especes[getSommet(mx)]->get_widgets(), m_especes[getSommet(my)]->get_widgets(), val));
         }
         file.close();
+        std::cout << "Before load_vect" << std::endl;
         for(auto elem : m_especes) elem->load_vect(m_aretes);
+        std::cout << "Before music" << std::endl;
         if(nbType == 1) music.openFromFile("audio/foret.wav");
         else if(nbType == 2) music.openFromFile("audio/mer.wav");
         music.play();

@@ -11,7 +11,7 @@
 
 class Graphe;
 
-void Kosaraju(Graphe *monGraphe,std::vector<std::vector<int>> &compo) ;
+void Kosaraju(Graphe *monGraphe, std::vector<std::vector<int>> &compo) ;
 void fillorder(Graphe *monGraphe,Espece *v,std::stack<Espece*> &pile1);
 Graphe* transposition(Graphe *graf);
 void DFS(Graphe *monGraphe, int v,std::vector<int> &connexe);

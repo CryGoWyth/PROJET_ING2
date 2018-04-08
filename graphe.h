@@ -26,6 +26,7 @@ class Graphe
         void loadImage(); /// Charger les Images d'un graphe
         int selectFamilie(); /// Choix d'espece d'un sommet a ajouter
         int selectionner(); /// Selection d'un sommet
+        int getSommet(int nb);
         int display(); /// Fonction d'affichage
         std::string proposerFichier();
         std::vector<Arete*> get_aretes() const;
