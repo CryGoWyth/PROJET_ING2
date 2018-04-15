@@ -11,7 +11,6 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="../SFML fercoq" />
@@ -45,6 +44,7 @@
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
 			<Add option="-fexceptions" />
+			<Add option="-DSFML_STATIC" />
 			<Add directory="C:/Users/Timothée/Desktop/SFML-2.4.2/include" />
 		</Compiler>
 		<Linker>
@@ -73,7 +73,7 @@
 			<debugger />
 			<lib_finder disable_auto="1" />
 			<DoxyBlocks>
-				<comment_style block="2" line="1" />
+				<comment_style block="3" line="3" />
 				<doxyfile_project />
 				<doxyfile_build />
 				<doxyfile_warnings />

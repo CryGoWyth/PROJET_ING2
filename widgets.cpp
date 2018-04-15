@@ -2,8 +2,10 @@
 
 Widgets::Widgets(int x, int y , int nb, int val) : mabar(x - 7, y + 3, val), m_x(x), m_y(y), m_nb(nb), selected(false), divx(0)
 {
+    /// Initialisation des elements graphiques
     std::ostringstream buf;
     font.loadFromFile("arial.ttf");
+    /// Chargement de la police d'ecriture
     m_text.setFont(font);
     m_text.setColor(sf::Color::White);
     m_text.setCharacterSize(12);
@@ -40,6 +42,7 @@ Widgets::~Widgets()
 
 void Widgets::dessiner(sf::RenderWindow &window, int nb)
 {
+    /// Affichage des entites graphique du widget
     mouvement(window, nb);
     window.draw(background);
     mabar.dessiner(window, nb);
@@ -54,6 +57,7 @@ void Widgets::dessiner(sf::RenderWindow &window, int nb)
 
 void Widgets::set_Texture(sf::Texture *mat, int i)
 {
+    /// Modification de l'image
     m_texture = *mat, nbImage = i;
     m_sprite.setTexture(*mat);
     m_sprite.setPosition(m_x + 12, m_y - 41);
@@ -61,6 +65,7 @@ void Widgets::set_Texture(sf::Texture *mat, int i)
 
 void Widgets::mouvement(sf::RenderWindow &window, int nb)
 {
+    /// Detection de mouvement et selection du widget
     if((selected && !nb && sf::Mouse::isButtonPressed(sf::Mouse::Left)) || (!mabar.get_selected() && sf::Mouse::isButtonPressed(sf::Mouse::Left) && (sf::Mouse::getPosition(window)).x > m_x + 12 && (sf::Mouse::getPosition(window)).x < m_x + 112 && (sf::Mouse::getPosition(window)).y > m_y - 41 && (sf::Mouse::getPosition(window)).y < m_y + 61)){
         if((sf::Mouse::getPosition(window).x - m_x) > 0 && divx == 0) divx = (sf::Mouse::getPosition(window).x - m_x);
         if(divy == 0) divy = (sf::Mouse::getPosition(window).y - m_y);

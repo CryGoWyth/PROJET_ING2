@@ -2,6 +2,7 @@
 
 Bar::Bar(int x, int y, int val) : m_x(x), m_y(y), selected(false)
 {
+    /// Initialisation des variables de position
     my = -((((val + 25) * 72) / 100) - 50);
     font.loadFromFile("arial.ttf");
     m_text.setFont(font);
@@ -9,7 +10,7 @@ Bar::Bar(int x, int y, int val) : m_x(x), m_y(y), selected(false)
     m_text.setCharacterSize(12);
     m_text.setStyle(sf::Text::Bold);
     m_text.setPosition(m_x - 13, m_y + 41);
-
+    /// Initialisation des elements graphiques
     m_button.setPosition(sf::Vector2f(m_x - 8, m_y - 4));
     m_button.setSize(sf::Vector2f(16, 8));
     m_button.setFillColor(sf::Color(105, 105, 105));
@@ -38,6 +39,7 @@ Bar::~Bar()
 
 void Bar::dessiner(sf::RenderWindow &window, int nb)
 {
+    /// Affichage graphique des elements
     mouvement(window, nb);
     window.draw(background);
     m_text.setString(get_value());
@@ -85,7 +87,7 @@ std::string Bar::get_value()
 {
     std::ostringstream test;
     int i = 0;
-    i = (((100 - (my + 50)) * 100) / 72) - 24;
+    i = (((100 - (my + 50)) * 100) / 72) - 25;
     test << i;
     return test.str();
 }

@@ -4,15 +4,30 @@
 #include "bar.h"
 #include <sstream>
 
+/*! \brief Declaration de la classe Widgets
+ *
+ * \param mabar slide bar de type Bar pour jauger le niveau de population d'une espece
+ * \param m_x coordonnee en abscisse du widget
+ * \param m_y coordonnee en ordonnee du widget
+ * \param m_nb numero du sommet
+ */
+
 class Widgets
 {
     public:
+        /// Constructeur surcharche de la classe Widgets
         Widgets(int x, int y , int nb, int val);
+        /// Destructeur de la classe
         ~Widgets();
+        /// Fonction d'affichage
         void dessiner(sf::RenderWindow &window, int nb);
+        /// Fonction de deplacement du widgets
         void mouvement(sf::RenderWindow &window, int nb);
+        /// Mise a jour du widget et se ses composantes graphiques
         void update();
+        /// Setteur d'image du widget
         void set_Texture(sf::Texture *mat, int i);
+        /// Setteur de la valeur de la slide bar
         void set_value(int value);
         bool get_selected();
         int get_nbImage();

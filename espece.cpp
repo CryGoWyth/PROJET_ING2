@@ -11,9 +11,7 @@ void Espece::load_vect(std::vector<Arete*> m_aretes)
     for(auto elem : m_aretes)
     {
         if(elem->get_first()->get_nb()==this->get_number())
-        {
             m_proies.push_back(new Arete(elem->get_first(), elem->get_second(), elem->get_mabar()));
-        }
 
         if(elem->get_second()->get_nb()==this->get_number())
         {
@@ -34,7 +32,7 @@ void Espece::update()
 
 void Espece::evo_pop(std::vector<Espece*> m_especes)
 {
-    ///N(t+1) = Nt + rNt(1-Nt/K)
+    /// Formule : N(t+1) = Nt + rNt(1-Nt/K)
     float f;
     std::cout << "Pop first : " << m_population << ", fact : " << m_facteur << ", cap : " << m_capacite << std::endl;
     if(m_capacite > 0){
@@ -42,23 +40,23 @@ void Espece::evo_pop(std::vector<Espece*> m_especes)
         popupdate = f;
     }
 
-    //On soustrait ce que les prédateurs mangent
+    ///On soustrait ce que les predateurs mangent
     std::cout << "Capacite : " << m_capacite << ", pop : " << f << std::endl;
     for(auto elem : m_predateurs)
-        popupdate = popupdate - (elem->get_mabar() * m_especes[elem->get_first()->get_nb()]->get_population());//get_pop(elem, m_especes, true);
+        popupdate = popupdate - (elem->get_mabar() * m_especes[elem->get_first()->get_nb()]->get_population());
     std::cout << "Fresh pop : " << popupdate << std::endl;
     this->get_widgets()->set_value(popupdate);
 }
 
 void Espece::evo_cap(std::vector<Espece*> m_especes)
 {
-    m_capacite = 0; //On remet à 0 avant de recalculer la nouvelle capacité
+    m_capacite = 0; /// On remet la capacite a 0 avant de la recalculer
 
-    ///K = Coeff * Nproie + ... (autant de proie qu'il y en a)
+    /// Formule : K = Coeff * Nproie + ... (autant de proie qu'il y en a)
     for(auto elem : m_proies){
         std::cout << "Get mabar de " << this->get_number() << " : " << elem->get_mabar() << ", pop : " <<  m_especes[elem->get_second()->get_nb()]->get_population() << ", nb : " << elem->get_first()->get_nb()<< std::endl;
 
-        m_capacite = m_capacite + (elem->get_mabar() *  m_especes[elem->get_second()->get_nb()]->get_population());///get_pop(elem, m_especes, false);
+        m_capacite = m_capacite + (elem->get_mabar() *  m_especes[elem->get_second()->get_nb()]->get_population());
     }
     std::cout << "Fresh cap " << this->get_number() << " : " << m_capacite << std::endl;
 }

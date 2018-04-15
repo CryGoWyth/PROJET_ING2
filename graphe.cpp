@@ -2,6 +2,7 @@
 
 Graphe::Graphe(int type) : window(sf::VideoMode(1024, 720), "ING2_PROJECT"), ok(false), T1(&Graphe::evolution, this), simul(false), nbType(2)
 {
+    /// Initialisation des elements graphiques et audio
     m_font.loadFromFile("arial.ttf");
     m_text.setFont(m_font);
     loadImage();
@@ -11,6 +12,7 @@ Graphe::Graphe(int type) : window(sf::VideoMode(1024, 720), "ING2_PROJECT"), ok(
 
 Graphe::Graphe(const Graphe &monGraphe) : T1(&Graphe::evolution, this), simul(false)
 {
+    /// Initialisation en fonction des donnees du graphe recues en parametre
     m_font.loadFromFile("arial.ttf");
     m_text.setFont(m_font);
     this->m_aretes = monGraphe.get_aretes();
@@ -19,6 +21,7 @@ Graphe::Graphe(const Graphe &monGraphe) : T1(&Graphe::evolution, this), simul(fa
 
 Graphe::~Graphe()
 {
+    /// Destruction des elements alloue dynamiquement
     for(auto elem : m_aretes) delete elem;
     for(auto elem : m_especes) delete elem;
 }
@@ -32,18 +35,45 @@ void Graphe::gameWhile()
         sf::Event event;
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window.close();
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) Kosaraju(this, compo_connexe);
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+                Kosaraju(this, compo_connexe);
+                for(int i = 0; i < compo_connexe.size(); i++){
+                    for(auto elem : compo_connexe[i]){
+                        for(auto it : compo_connexe[i]){
+                            for(auto aret : m_aretes){
+                                if(aret->get_first()->get_nb() == m_especes[elem]->get_number() && aret->get_second()->get_nb() == m_especes[it]->get_number())
+                                    aret->set_couleur_compo(1);
+                                if(aret->get_first()->get_nb() == m_especes[it]->get_number() && aret->get_second()->get_nb() == m_especes[elem]->get_number())
+                                    aret->set_couleur_compo(1);
+                            }
+                        }
+                    }
+                }
+            }
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z)){
+                for(int i = 0; i < compo_connexe.size(); i++){
+                    for(auto elem : compo_connexe[i]){
+                        for(auto it : compo_connexe[i]){
+                            for(auto aret : m_aretes){
+                                if(aret->get_first()->get_nb() == m_especes[elem]->get_number() && aret->get_second()->get_nb() == m_especes[it]->get_number())
+                                    aret->set_couleur_compo(0);
+                                if(aret->get_first()->get_nb() == m_especes[it]->get_number() && aret->get_second()->get_nb() == m_especes[elem]->get_number())
+                                    aret->set_couleur_compo(0);
+                            }
+                        }
+                    }
+                }
+            }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::M))
                 for(auto elem : m_aretes) std::cout << "Arete : " << elem->get_first()->get_nb() << ", " << elem->get_second()->get_nb() << std::endl;
         }
 
         nbControle = 0;
-        for(auto elem : m_aretes) if(elem->get_selected()) nbControle++; /// Blindage de deplacement unique
-        for(auto elem : m_especes) if(elem->get_selected()) nbControle++;/// Une seule entité a la fois
+        for(auto elem : m_aretes) if(elem->get_selected()) nbControle++;
+        for(auto elem : m_especes) if(elem->get_selected()) nbControle++;
 
         state = display();
 
-        //Si on est en simulation, on effectue le Thread en boucle
         if(simul == true)T1.launch();
         if(state != -1) action(state);
     }
@@ -51,16 +81,17 @@ void Graphe::gameWhile()
 
 void Graphe::action(int nb)
 {
+    /// Les differentes actions en fonction de l'option choisie sont :
     if(nb == 0) creer();/// creer un nouveau graphe
-    else if(nb == 1) load();/// charger fait -> choix fichier
-    else if(nb == 2) save();/// sauver fait -> choix fichier
-    else if(nb == 3) ajouter(); /// ajouter fait -> choix famille
-    else if(nb == 4) modifier();/// modifier
-    else if(nb == 5) supprimer();/// supprimer
+    else if(nb == 1) load();/// charger un graphe
+    else if(nb == 2) save();/// sauver un graphe
+    else if(nb == 3) ajouter(); /// ajouter une espece
+    else if(nb == 4) modifier();/// modifier une arete
+    else if(nb == 5) supprimer();/// supprimer une espece
     else if(nb == 6){
         if(simul) simul = false;
         else{
-            save(); ///Le bouléen passe à vrai pour indiqué que nous somme en simulation
+            save();
             simul = true, m_clock.restart();/// Simulation
         }
     }
@@ -68,6 +99,7 @@ void Graphe::action(int nb)
 
 void Graphe::information(std::string msg)
 {
+    /// Affichage de la marche a suivre en fonction de l'action a effectue
     m_msg = msg;
     m_text.setString(m_msg);
     m_text.setCharacterSize(30);
@@ -81,13 +113,14 @@ void Graphe::information(std::string msg)
 
 void Graphe::evolution()
 {
-    //on crée notre timer qui va stocker la quantité de temps écoulée depuis le dernier restarts de la clock
+    /// Calcul de l'evolution des populations
     sf::Time m_time = m_clock.getElapsedTime();
-    if(m_time.asSeconds() >= 1){//Toutes les 5 secondes ...
+    if(m_time.asSeconds() >= 1){
         std::cout << "Time : " << m_time.asSeconds() << std::endl;
 
-        for(auto elem : m_especes)//On appelle les fonctions d'évolution
+        for(auto elem : m_especes)
             elem->evo_cap(m_especes);
+        /// Appelle des fonctions d'evolution de chaque espece
 
         std::cout << std::endl << std::endl;
         for(auto elem : m_especes)
@@ -95,12 +128,13 @@ void Graphe::evolution()
         std::cout << std::endl << std::endl;
         for(auto elem : m_especes)
             elem->update();
-        m_clock.restart();//On remet à 0 la clock, logique ...
+        m_clock.restart();
     }
 }
 
 void Graphe::mainMenu()
 {
+    /// Menu principal de l'application :
     music.openFromFile("audio/menu_principal.wav");
     music.play();
     sf::Text choix1 = m_text, choix2 = m_text, titre = m_text;
@@ -109,11 +143,12 @@ void Graphe::mainMenu()
     titre.setStyle(sf::Text::Underlined);
     support.setOutlineThickness(3);
     support.setOutlineColor(sf::Color(200, 200, 200));
-    support.setFillColor(sf::Color(15, 15, 15));
+    support.setFillColor(sf::Color(30, 30, 30));
     support.setPosition(65, 370);
     support.setSize(sf::Vector2f(300, 40));
-
+    /// Creer un graphe
     choix1.setString("Créer un graphe"), choix2.setString("Charger un graphe"), titre.setString("Piscine de Code");
+    /// Charger un graphe
     titre.setPosition(300, 70);
     choix1.setPosition(70, 340);
     choix2.setPosition(70, 410);
@@ -127,7 +162,7 @@ void Graphe::mainMenu()
             }
         }
 
-        window.clear(sf::Color(15, 15, 15));
+        window.clear(sf::Color(30, 30, 30));
         if(sf::Mouse::getPosition(window).x > 70 && sf::Mouse::getPosition(window).x < 70 + 300 && sf::Mouse::getPosition(window).y > 340 && sf::Mouse::getPosition(window).y < 340 + 40){
             support.setPosition(65, 340);
             window.draw(support);
@@ -151,12 +186,13 @@ void Graphe::mainMenu()
 
 void Graphe::supprimer()
 {
+    /// Suppression d'une espece apres avoir clique dessus
     int i = -1;
     ok = true;
     information("Cliquez sur une espece pour la supprimer");
     while(sf::Mouse::isButtonPressed(sf::Mouse::Left));
     while(i == -1) i = selectionner();
-    for(auto it = m_aretes.begin(); it != m_aretes.end(); it++){ /// On supprime dabord les aretes relier au sommet
+    for(auto it = m_aretes.begin(); it != m_aretes.end(); it++){ /// On supprime dabord les aretes reliees au sommet
         if((*it)->get_first()->get_nb() == i || (*it)->get_second()->get_nb() == i){
             m_aretes.erase(it);
             it = m_aretes.begin() - 1;
@@ -173,8 +209,10 @@ void Graphe::supprimer()
 
 void Graphe::modifier()
 {
+    /// Fonction permettant de modifier une connexion entre especes
     int i = -1, j = -1;
     ok = true;
+    /// Possibilite de supprimer une connexion
     bool check = false;
     information("Cliquez sur une premiere espece : le prédateur");
     display();
@@ -185,7 +223,7 @@ void Graphe::modifier()
     display();
     while(sf::Mouse::isButtonPressed(sf::Mouse::Left));
     while(j == -1 || j == i) j = selectionner();
-    if(j == -2){ok = false;return;} /// on quitte
+    if(j == -2){ok = false;return;} /// Possibilite d'annuler l'action en cours
 
     for(auto it = m_aretes.begin(); it != m_aretes.end(); it++){
         if(((*it)->get_first()->get_nb() == i && (*it)->get_second()->get_nb() == j) || ((*it)->get_first()->get_nb() == j && (*it)->get_second()->get_nb() == i)){
@@ -208,6 +246,7 @@ void Graphe::modifier()
 
 int Graphe::selectionner()
 {
+    /// Fonction permettant de selectionner une espece et de retourner son indice
     for(auto elem : m_especes){
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Mouse::getPosition(window).x > elem->get_widgets()->getmx() - 50 && sf::Mouse::getPosition(window).x < elem->get_widgets()->getmx() + 50 && sf::Mouse::getPosition(window).y > elem->get_widgets()->getmy() - 50 && sf::Mouse::getPosition(window).y < elem->get_widgets()->getmy() + 50)
             return elem->get_number();
@@ -219,6 +258,7 @@ int Graphe::selectionner()
 
 void Graphe::ajouter()
 {
+    /// Fonction d'ajout d'une espece en fonction de l'univers du graphe
     ok = true;
     int i = selectFamilie(), a = 0;
     if(i == - 2){ok = false; return;}
@@ -239,6 +279,7 @@ void Graphe::ajouter()
 
 void Graphe::loadImage()
 {
+    /// Chargement des images des especes
     std::string buf, buffer; int taille = 0, mysize = 0;
     std::ostringstream ss;
     sf::Texture m_textur;
@@ -257,6 +298,7 @@ void Graphe::loadImage()
 
 void createButton(std::vector<Button*> &mesButtons, int nbType)
 {
+    /// Creation des bouton des especes
     std::string buf, buffer; int taille = 0, mysize = 0;
     if(nbType == 1) buf = "pics/image_graphe1/", taille = 14;
     else if(nbType == 2) buf = "pics/image_graphe2/", taille = 12;
@@ -271,11 +313,12 @@ void createButton(std::vector<Button*> &mesButtons, int nbType)
 
 int Graphe::selectFamilie()
 {
+    /// Selection de l'espece a ajouter
     bool check = false;
     std::vector<Button*> mesButtons;
     sf::Sprite m_sprite;
     ok = true;
-
+    /// Affichage de l'image de l'espece survole par la souris
     while(sf::Mouse::isButtonPressed(sf::Mouse::Left));
     if(m_texture.size() < 1) loadImage();
     createButton(mesButtons, nbType);
@@ -289,7 +332,7 @@ int Graphe::selectFamilie()
     m_sprite.setPosition(window.getSize().x / 4 + 300, window.getSize().y / 2 - 50);
 
     while(!check){
-        window.clear(sf::Color(15, 15, 15));
+        window.clear(sf::Color(30, 30, 30));
         for(auto elem : m_aretes) elem->dessiner(window, nbControle);
         for(auto elem : m_especes) elem->dessiner(window, nbControle);
         window.draw(bg);
@@ -315,8 +358,9 @@ int Graphe::selectFamilie()
 
 void Graphe::creer()
 {
+    /// Creation d'un nouveau graphe en fonction de l'univers choisi
     music.stop();
-    window.clear(sf::Color(15, 15, 15));
+    window.clear(sf::Color(30, 30, 30));
     window.display();
     while(sf::Mouse::isButtonPressed(sf::Mouse::Left));
     m_especes.erase(m_especes.begin(), m_especes.end());
@@ -341,7 +385,7 @@ void Graphe::creer()
                     return;
             }
         }
-        window.clear(sf::Color(15, 15, 15));
+        window.clear(sf::Color(30, 30, 30));
         window.draw(bg);
         window.draw(m_text); /// On les affiches
 
@@ -353,6 +397,7 @@ void Graphe::creer()
                 for(auto elem : mesButtons) delete elem;
                 if(nbType == 1) music.openFromFile("audio/foret.wav");
                 else if(nbType == 2) music.openFromFile("audio/mer.wav");
+                else if(nbType == 3) music.openFromFile("audio/savane.wav");
                 music.play();
                 return;
             }
@@ -371,6 +416,7 @@ int Graphe::getSommet(int nb)
 
 void Graphe::save()
 {
+    /// Sauvegarde de tous les elements du graphe courant dans un fichier
     std::ofstream file(proposerFichier(), std::ios::out);
     std::cout << "Saving..." << std::endl;
 
@@ -393,6 +439,7 @@ void Graphe::save()
 
 int Graphe::load()
 {
+    /// Chargement de tous les elements d'un fichier dans le graphe
     music.stop();
     m_especes.erase(m_especes.begin(), m_especes.end());
     m_aretes.erase(m_aretes.begin(), m_aretes.end());
@@ -419,6 +466,7 @@ int Graphe::load()
         for(auto elem : m_especes) elem->load_vect(m_aretes);
         if(nbType == 1) music.openFromFile("audio/foret.wav");
         else if(nbType == 2) music.openFromFile("audio/mer.wav");
+        else if(nbType == 3) music.openFromFile("audio/savane.wav");
         music.play();
     }
     else return 1;
@@ -427,8 +475,9 @@ int Graphe::load()
 
 int Graphe::display()
 {
+    /// Affichage de tous les elements graphiques du graphe
     int state = 0;
-    window.clear(sf::Color(15, 15, 15));
+    window.clear(sf::Color(30, 30, 30));
     for(auto elem : m_aretes) elem->dessiner(window, nbControle);
     for(auto elem : m_especes) elem->dessiner(window, nbControle);
     state = m_menu.afficher(window);
@@ -442,13 +491,14 @@ int Graphe::display()
 
 std::string Graphe::proposerFichier()
 {
+    /// Choix du fichier (pour la sauvegarde ou le chargement)
     std::string buf;
     sf::Text montext = m_text;
     sf::Event e;
     ok = true;
     bg.setPosition(window.getSize().x / 4, window.getSize().y / 4);
     bg.setSize(sf::Vector2f(2 * window.getSize().x / 4, (2 * window.getSize().y / 4) / 2));
-    bg.setFillColor(sf::Color(5, 5, 5));
+    bg.setFillColor(sf::Color(30, 39, 44));
 
     m_text.setPosition(window.getSize().x / 4 + 50, window.getSize().y / 4 + 10);
     m_text.setString("Saississez un nom de fichier : ");
@@ -470,7 +520,7 @@ std::string Graphe::proposerFichier()
         }
 
         montext.setString(buf + ".txt");
-        window.clear(sf::Color(15, 15, 15));
+        window.clear(sf::Color(30, 30, 30));
         for(auto elem : m_aretes) elem->dessiner(window, nbControle);
         for(auto elem : m_especes) elem->dessiner(window, nbControle);
         window.draw(bg);
